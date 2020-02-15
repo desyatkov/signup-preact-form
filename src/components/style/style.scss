@@ -1,8 +1,253 @@
-html, body {
-	font: 14px/1.21 'Helvetica Neue', arial, sans-serif;
-	font-weight: 400;
+.authGroup {
+	position: absolute;
+	background-color: #fff;
+	top: 60px;
+	left: 0;
+	right: 0;
+	height: calc(100% - 60px);
+	overflow-y: auto;
+	border-radius: 30px 30px 0 0;
 }
 
-h1 {
+.closeBtnWrap {
+	position: absolute;
+	right: 19px;
+	top: 20px;
+}
+
+.closeBtn {
+	width: 15px;
+	height: 15px;
+	position: relative;
+
+	&:after {
+		content: '';
+		height: 15px;
+		border-left: 2px solid #545454;
+		position: absolute;
+		transform: rotate(45deg);
+		left: 5px;
+	}
+
+	&:before {
+		content: '';
+		height: 15px;
+		border-left: 2px solid #545454;
+		position: absolute;
+		transform: rotate(-45deg);
+		left: 5px;
+	}
+}
+
+.app {
+	margin: 0 32px;
+
+	.title {
+		font-size: 1.25em;
+		font-style: normal;
+		font-weight: 600;
+		line-height: 126%;
+		margin: 56px 0 25px;
+		color: #545454;
+	}
+}
+
+.textInput {
+	padding: 1.0625em;
+	font-size: 1em;
+	width: 100%;
+	display: block;
+	box-sizing: border-box;
+	border-radius: 4px;
+	border: 2px solid #545454;
 	text-align: center;
+	font-family:inherit;
+	color: #545454;
+
+	&.touched ~ .fieldLabel,
+	&:focus ~ .fieldLabel {
+		transform: scale(0.75) translateY(-37px) translateX(-233px);
+	}
+}
+
+.fieldLabel {
+	background: #fff;
+	bottom: 16px;
+	box-sizing: border-box;
+	color: #AAABAE;
+	font-size: 1em;
+	font-weight: 400;
+	text-align: center;
+	max-width: calc(100% - (2*8px));
+	overflow: hidden;
+	padding: 0 8px;
+	text-overflow: ellipsis;
+	transition: all 150ms cubic-bezier(0.4,0,0.2,1),opacity 150ms cubic-bezier(0.4,0,0.2,1), text-align 1s cubic-bezier(0.4,0,0.2,1);
+	white-space: nowrap;
+	z-index: 1;
+	pointer-events: none;
+	position: absolute;
+	width: auto;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.inputGroup {
+	position: relative;
+	margin-bottom: 15px;
+
+	&.touched .fieldLabel {
+		transform: scale(0.75) translateY(-37px) translateX(-210px);
+	}
+
+	&.error {
+		.textInput {
+			border-color: #FF004F;
+		}
+
+		.fieldLabel {
+			color: #FF004F;
+		}
+	}
+}
+
+.inputGroupCheckBox {
+	&.error {
+		.checkboxLblText {
+			color: #FF004F;
+		}
+	}
+}
+
+
+
+.checkboxLabel {
+	display: block;
+	position: relative;
+	cursor: pointer;
+	margin-bottom: 10px;
+
+	input {
+		position: absolute;
+		opacity: 0;
+		cursor: pointer;
+		margin: 0;
+	}
+
+	.checkboxCustom {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 16px;
+		width: 16px;
+		background-color: transparent;
+		border-radius: 2px;
+		transition: all 0.3s ease-out;
+		border: 1px solid #FF004F;
+	}
+
+	input:checked ~ .checkboxCustom {
+		background-color: #FF004F;
+		transform: rotate(0deg) scale(1);
+		opacity:1;
+		border: 2px solid #FF004F;
+	}
+
+	.checkboxCustom::after {
+		position: absolute;
+		content: "";
+		left: 6px;
+		top: 11px;
+		height: 0;
+		width: 0;
+		border-radius: 5px;
+		border: solid #fff;
+		border-width: 0 3px 3px 0;
+		transform: rotate(0deg) scale(0);
+		opacity: 1;
+		transition: all 0.3s ease-out;
+	}
+
+	input:checked ~ .checkboxCustom::after {
+		transform: rotate(45deg) scale(1);
+		opacity: 1;
+		left: 3px;
+		top: -1px;
+		width: 5px;
+		height: 9px;
+		border: solid #fff;
+		border-width: 0 1px 1px 0;
+		background-color: transparent;
+		border-radius: 0;
+	}
+
+	.checkboxLblText {
+		margin-left: 25px;
+		font-weight: 500;
+		font-size: 14px;
+		line-height: 120%;
+		color: #545454;
+
+		a {
+			color: #0062D6;
+			text-decoration: none;
+		}
+	}
+}
+
+.submitWrap {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	margin-top: 20px;
+}
+
+.submitButton {
+	padding: 0;
+	border: none;
+	width: 193px;
+	height: 42px;
+	background: linear-gradient(0deg, #FAA012 -23.81%, #F7C907 128.57%);
+	border-radius: 4px;
+	font-family: inherit;
+	font-weight: 600;
+	font-size: 1em;
+	text-align: center;
+	letter-spacing: 0.5px;
+	text-transform: uppercase;
+	color: #FFFFFF;
+
+	&:focus {
+		outline: none;
+	}
+
+	&:disabled,
+	&[disabled]{
+		background: #DBDBDB;
+		color: #545454;
+	}
+}
+
+.errorsBox {
+	margin-top: 15px;
+}
+
+.errorsBoxItem {
+	margin-bottom: 5px;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 0.875em;
+	line-height: 120%;
+	letter-spacing: 0.25px;
+	color: #FF004F;
+}
+
+.changeView {
+	font-weight: 500;
+	font-size: 0.875em;
+	line-height: 120%;
+	text-align: center;
+	letter-spacing: 0.25px;
+	color: #0062D6;
+	margin-top: 15px;
 }

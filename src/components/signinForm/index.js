@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import {withFormik} from 'formik';
 import * as Yup from 'yup';
 import classnames from 'classnames';
 import pick from 'lodash/pick';
 import values from 'lodash/values';
 import axios from 'axios';
+import style from '../style/style.scss'
+
+const API_LOGIN = '/api/v1/auth/login';
+const VERIFIED_SIGN_UP = '/api/v1/auth/verified-sign-up';
 
 const enhancer = withFormik({
     validationSchema: Yup.object().shape({
@@ -36,7 +40,7 @@ const enhancer = withFormik({
     }),
 
     handleSubmit: (values, {setSubmitting, setStatus, setFieldValue}) => {
-        const { email, name, password, privacy, offers} = values;
+        const { email, name, password, privacy, offers, redirect} = values;
 
         const payload = {
             userData: {
@@ -58,13 +62,17 @@ const enhancer = withFormik({
 
         setStatus({ loading: true });
 
-
-        axios.post('/api/v1/auth/login', {
-                email: "lklz1ws6@notua.com",
-                password: "1234256Password!!"
-            })
+        axios.post(VERIFIED_SIGN_UP, payload)
             .then(function (response) {
-                setStatus({ loading: false, server: {error: false, message: response.data.message} });
+                return axios.post(API_LOGIN, {email, password})
+            })
+            .then((response) => {
+                const resp = response.data;
+                setStatus({ loading: false, server: {error: false, message: resp.message} });
+                if(redirect) {
+                    window.location.href = "redirect";
+                }
+                window.location.reload();
             })
             .catch(function (error, data) {
                 setStatus({ loading: false, server: {error: true, message: error.response.data.message} });
@@ -95,7 +103,7 @@ const DisplayState = props => {
 
 const Label = ({error, className, children, ...props}) => {
     return (
-        <label className="label" {...props}>
+        <label className={className} {...props}>
             {children}
         </label>
     );
@@ -103,49 +111,52 @@ const Label = ({error, className, children, ...props}) => {
 
 function Checkbox({id, label, error, value, onChange, className, ...props}) {
     const classes = classnames(
-        'input-group',
+        style.inputGroupCheckBox,
         {
-            'error': !!error,
+            [style.error]: !!error
         },
         className
     );
 
     return (
         <div className={classes}>
-            <label>
+            <Label error={error} className={style.checkboxLabel}>
                 <input
                     id={id}
                     type="checkbox"
                     checked={value}
                     onChange={onChange}
                     {...props} />
-                <span className="label">{label}</span>
-            </label>
+                <span className={style.checkboxCustom} />
+                <div className={style.checkboxLblText}>{label}</div>
+            </Label>
         </div>
     );
 }
 
-const TextInput = ({type, id, label, error, value, onChange, className, ...props}) => {
+const TextInput = ({type, id, label, error, touched, value, onChange, className, ...props}) => {
     const classes = classnames(
-        'input-group',
+        style.inputGroup,
         {
-            'error': !!error,
+            [style.error]: !!error,
+            [style.touched]: touched
         },
         className
     );
     return (
-        <div className={classes}>
-            <Label htmlFor={id} error={error}>
-                {label}
-            </Label>
+        <div className={classes} >
             <input
+                autocomplete="off"
                 id={id}
-                className="text-input"
+                className={style.textInput}
                 type={type}
                 value={value}
                 onChange={onChange}
                 {...props}
             />
+            <div className={style.fieldLabel}>
+                {label}
+            </div>
         </div>
     );
 };
@@ -157,9 +168,9 @@ const GenerateError = ({touched, errors, serverErr}) => {
     if (serverErr && serverErr.server && serverErr.server.error) {
         errorList.push(serverErr.server.message);
     }
-    console.log(errorList)
-    return <div>
-        {errorList.map((err)=>(<div>{err}</div>))}
+
+    return <div className={style.errorsBox}>
+        {errorList.map((err)=>(<div className={style.errorsBoxItem}>*{err}</div>))}
     </div>
 };
 
@@ -172,11 +183,8 @@ const MyForm = props => {
         handleChange,
         handleBlur,
         handleSubmit,
-        handleReset,
         isSubmitting,
-        submitting,
         status,
-        reset,
     } = props;
 
     const [stat, setStat] = useState({ loading: false, server: {error: false, message: ''}});
@@ -191,20 +199,35 @@ const MyForm = props => {
             <TextInput
                 id="name"
                 type="text"
-                label="Name"
+                label="User name"
                 placeholder=""
                 error={touched.name && errors.name}
                 value={values.name}
+                touched={touched.name}
                 onChange={handleChange}
                 onBlur={handleBlur}
             />
+
+            <TextInput
+                id="email"
+                type="email"
+                label="Email"
+                placeholder=""
+                error={touched.email && errors.email}
+                value={values.email}
+                touched={touched.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+            />
+
             <TextInput
                 id="password"
                 type="password"
-                label="password"
+                label="Password"
                 placeholder=""
                 error={touched.password && errors.password}
                 value={values.password}
+                touched={touched.password}
                 onChange={handleChange}
                 onBlur={handleBlur}
             />
@@ -212,20 +235,11 @@ const MyForm = props => {
             <TextInput
                 id="confirmpassword"
                 type="password"
-                label="confirm password"
+                label="Confirm password"
                 placeholder=""
                 error={touched.confirmpassword && errors.confirmpassword}
                 value={values.confirmpassword}
-                onChange={handleChange}
-                onBlur={handleBlur}
-            />
-            <TextInput
-                id="email"
-                type="email"
-                label="Email"
-                placeholder="Enter your email"
-                error={touched.email && errors.email}
-                value={values.email}
+                touched={touched.confirmpassword}
                 onChange={handleChange}
                 onBlur={handleBlur}
             />
@@ -238,7 +252,7 @@ const MyForm = props => {
                 value={values.privacy}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                label="I am over 18 and have accepted the Terms and Privacy Policy"
+                label={(()=>(<Fragment>I am over 18 and have accepted the <a href="/terms-of-use" target="_blank">Terms</a> and <a href="/privacy-policy" target="_blank">Privacy Policy</a></Fragment>))()}
             />
 
             <Checkbox
@@ -253,26 +267,24 @@ const MyForm = props => {
             />
 
 
-            <div>{
-                <GenerateError touched={touched} errors={errors} serverErr={stat}/>
-            }</div>
+            <GenerateError touched={touched} errors={errors} serverErr={stat} />
 
-            <button type="submit" disabled={!(dirty && !Object.keys(pick(errors, ["email", "name", "password", "confirmpassword"])).length) || isSubmitting}>
-                SIGN UP
-            </button>
-            <DisplayState {...props} />
+            <div className={style.submitWrap}>
+                <button className={style.submitButton} type="submit" disabled={!(dirty && !Object.keys(pick(errors, ["email", "name", "password", "confirmpassword"])).length) || isSubmitting}>
+                    SIGN UP
+                </button>
+            </div>
+            {/*<DisplayState {...props} />*/}
         </form>
     );
 };
 
 const MyEnhancedForm = enhancer(MyForm);
 
-const SigninForm = () => (
-    <div className="app">
-        <p>
-            This example does just that. It demonstrates a custom text input, label, and form
-            feedback components as well as a cool shake animation that's triggered if a field is
-            invalid.
+const SignupForm = ({redirect}) => (
+    <div className={style.app}>
+        <p className={style.title}>
+            Kaaching! We want to give you 500 free spins - where should we send it?
         </p>
 
         <MyEnhancedForm
@@ -283,12 +295,15 @@ const SigninForm = () => (
                     password: '',
                     confirmpassword: '',
                     privacy: false,
-                    offers: false
+                    offers: false,
+                    redirect: redirect
                 }
             }
         />
+
+        <div className={style.changeView}>Already user? sign in</div>
     </div>
 );
 
 
-export default SigninForm;
+export default SignupForm;
