@@ -64,9 +64,14 @@
 	font-family:inherit;
 	color: #545454;
 
+	&:disabled {
+		background-color: #fff;
+		opacity: .6;
+	}
+
 	&.touched ~ .fieldLabel,
 	&:focus ~ .fieldLabel {
-		transform: scale(0.75) translateY(-37px) translateX(-233px);
+		transform: scale(0.75) translateY(-37px) translateX(-237px);
 	}
 }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect } from 'react';
 import {withFormik} from 'formik';
 import * as Yup from 'yup';
 import classnames from 'classnames';
@@ -8,31 +8,14 @@ import axios from 'axios';
 import style from '../style/style.scss'
 
 const API_LOGIN = '/api/v1/auth/login';
-const VERIFIED_SIGN_UP = '/api/v1/auth/verified-sign-up';
 
 const enhancer = withFormik({
     validationSchema: Yup.object().shape({
-        name: Yup.string()
-            .min(2, 'Your name is longer than that')
-            .required('Name can\'t be blank'),
         password: Yup.string()
-            .min(8, 'Password must be at least 8 characters')
             .required('Password can\'t be blank'),
-        confirmpassword: Yup.string()
-            .required('Confirm password can\'t be blank')
-            .when("password", {
-                is: val => (!!(val && val.length > 0)),
-                then: Yup.string().oneOf(
-                    [Yup.ref("password")],
-                    "Incompatible password"
-                )
-        }),
         email: Yup.string()
             .email('Invalid email address')
-            .required('Email is required!'),
-        privacy: Yup.bool()
-            .oneOf([true], 'You must accept our terms'),
-        offers: Yup.bool()
+            .required('Email is required!')
     }),
 
     mapPropsToValues: ({user}) => ({
@@ -40,32 +23,11 @@ const enhancer = withFormik({
     }),
 
     handleSubmit: (values, {setSubmitting, setStatus, setFieldValue}) => {
-        const { email, name, password, privacy, offers, redirect} = values;
-
-        const payload = {
-            userData: {
-                email,
-                password,
-                name
-            },
-            profileFields: [
-                {
-                    key: "privacy-accept",
-                    value: privacy
-                },
-                {
-                    key: "subscription-accept",
-                    value: offers
-                }
-            ]
-        };
+        const { email, password, redirect} = values;
 
         setStatus({ loading: true });
 
-        axios.post(VERIFIED_SIGN_UP, payload)
-            .then(function (response) {
-                return axios.post(API_LOGIN, {email, password})
-            })
+        axios.post(API_LOGIN, {email, password})
             .then((response) => {
                 const resp = response.data;
                 setStatus({ loading: false, server: {error: false, message: resp.message} });
@@ -77,29 +39,13 @@ const enhancer = withFormik({
             .catch(function (error, data) {
                 setStatus({ loading: false, server: {error: true, message: error.response.data.message} });
                 setFieldValue('password', '', false);
-                setFieldValue('confirmpassword', '', false);
             }).finally(()=>{
                 setSubmitting(false);
             })
         },
 
-    displayName: 'signup',
+    displayName: 'signin',
 });
-
-const DisplayState = props => {
-    return (<div style={{margin: '1rem 0'}}>
-        <h3 style={{fontFamily: 'monospace'}} />
-        <pre
-            style={{
-                background: '#f6f8fa',
-                fontSize: '.65rem',
-                padding: '.5rem',
-            }}
-        >
-            <strong>props</strong> = {JSON.stringify(props, null, 2)}
-        </pre>
-    </div>)
-};
 
 const Label = ({error, className, children, ...props}) => {
     return (
@@ -185,6 +131,7 @@ const MyForm = props => {
         handleSubmit,
         isSubmitting,
         status,
+        forgotHandlerClick,
     } = props;
 
     const [stat, setStat] = useState({ loading: false, server: {error: false, message: ''}});
@@ -196,17 +143,6 @@ const MyForm = props => {
     return (
         <form onSubmit={handleSubmit}>
             {stat && stat.loading ? <div>Hello World</div> : null}
-            <TextInput
-                id="name"
-                type="text"
-                label="User name"
-                placeholder=""
-                error={touched.name && errors.name}
-                value={values.name}
-                touched={touched.name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-            />
 
             <TextInput
                 id="email"
@@ -232,40 +168,7 @@ const MyForm = props => {
                 onBlur={handleBlur}
             />
 
-            <TextInput
-                id="confirmpassword"
-                type="password"
-                label="Confirm password"
-                placeholder=""
-                error={touched.confirmpassword && errors.confirmpassword}
-                value={values.confirmpassword}
-                touched={touched.confirmpassword}
-                onChange={handleChange}
-                onBlur={handleBlur}
-            />
-
-            <Checkbox
-                name="privacy"
-                type="checkbox"
-                checked={values.privacy}
-                error={touched.privacy && errors.privacy}
-                value={values.privacy}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                label={(()=>(<Fragment>I am over 18 and have accepted the <a href="/terms-of-use" target="_blank">Terms</a> and <a href="/privacy-policy" target="_blank">Privacy Policy</a></Fragment>))()}
-            />
-
-            <Checkbox
-                name="offers"
-                type="checkbox"
-                checked={values.offers}
-                error={touched.offers && errors.offers}
-                value={values.offers}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                label="Send me tips & exclusive offers"
-            />
-
+            <div className={style.changeView} onClick={forgotHandlerClick}>Forgot password?</div>
 
             <GenerateError touched={touched} errors={errors} serverErr={stat} />
 
@@ -274,36 +177,31 @@ const MyForm = props => {
                     SIGN UP
                 </button>
             </div>
-            {/*<DisplayState {...props} />*/}
         </form>
     );
 };
 
 const MyEnhancedForm = enhancer(MyForm);
 
-const SignupForm = ({redirect}) => (
+const SigninForm = ({redirect, clickHandler, forgotHandler}) => (
     <div className={style.app}>
         <p className={style.title}>
             Kaaching! We want to give you 500 free spins - where should we send it?
         </p>
-
         <MyEnhancedForm
+            forgotHandlerClick={forgotHandler}
             user={
                 {
                     email: '',
-                    name: '',
                     password: '',
-                    confirmpassword: '',
-                    privacy: false,
-                    offers: false,
-                    redirect: redirect
+                    redirect: redirect,
                 }
             }
         />
 
-        <div className={style.changeView}>Already user? sign in</div>
+        <div className={style.changeView} onClick={clickHandler}>New user? sign up</div>
     </div>
 );
 
 
-export default SignupForm;
+export default SigninForm;

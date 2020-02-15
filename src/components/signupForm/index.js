@@ -281,7 +281,7 @@ const MyForm = props => {
 
 const MyEnhancedForm = enhancer(MyForm);
 
-const SignupForm = ({redirect}) => (
+const SignupForm = ({redirect, clickHandler}) => (
     <div className={style.app}>
         <p className={style.title}>
             Kaaching! We want to give you 500 free spins - where should we send it?
@@ -301,7 +301,7 @@ const SignupForm = ({redirect}) => (
             }
         />
 
-        <div className={style.changeView}>Already user? sign in</div>
+        <div className={style.changeView} onClick={clickHandler}>Already user? sign in</div>
     </div>
 );
 
