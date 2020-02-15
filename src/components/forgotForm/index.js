@@ -1,11 +1,10 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import {withFormik} from 'formik';
 import * as Yup from 'yup';
-import classnames from 'classnames';
 import pick from 'lodash/pick';
-import values from 'lodash/values';
 import axios from 'axios';
 import style from '../style/style.scss'
+import { Loader, TextInput, GenerateError } from '../common';
 
 const API_LOGIN_FORGOT = 'api/v1/auth/reset-password';
 const API_LOGIN_CONFIRM = 'api/v1/auth/reset-confirm';
@@ -65,46 +64,6 @@ const enhancer = withFormik({
     displayName: 'forgot',
 });
 
-const TextInput = ({type, id, label, error, touched, value, onChange, className, ...props}) => {
-    const classes = classnames(
-        style.inputGroup,
-        {
-            [style.error]: !!error,
-            [style.touched]: touched
-        },
-        className
-    );
-    return (
-        <div className={classes} >
-            <input
-                autocomplete="off"
-                id={id}
-                className={style.textInput}
-                type={type}
-                value={value}
-                onChange={onChange}
-                {...props}
-            />
-            <div className={style.fieldLabel}>
-                {label}
-            </div>
-        </div>
-    );
-};
-
-const GenerateError = ({touched, errors, serverErr}) => {
-    const touchedTrue = Object.keys(touched);
-    const errorList = values(pick(errors, touchedTrue));
-
-    if (serverErr && serverErr.server && serverErr.server.error) {
-        errorList.push(serverErr.server.message);
-    }
-
-    return <div className={style.errorsBox}>
-        {errorList.map((err)=>(<div className={style.errorsBoxItem}>*{err}</div>))}
-    </div>
-};
-
 const Forgot = props => {
     const {
         values,
@@ -126,7 +85,7 @@ const Forgot = props => {
 
     return (
         <form onSubmit={handleSubmit}>
-            {stat && stat.loading ? <div>Hello World</div> : null}
+            <Loader status={stat}/>
 
             <TextInput
                 id="email"
@@ -179,9 +138,7 @@ const Forgot = props => {
     );
 };
 
-
 const MyEnhancedForgot = enhancer(Forgot);
-
 
 const ForgotForm = ({redirect, clickHandler}) => (
     <div className={style.app}>
@@ -201,7 +158,7 @@ const ForgotForm = ({redirect, clickHandler}) => (
             }
         />
 
-        <div className={style.changeView} onClick={clickHandler}>Sign in instead</div>
+        <div className={style.changeView} onClick={clickHandler}>Sign in</div>
     </div>
 );
 

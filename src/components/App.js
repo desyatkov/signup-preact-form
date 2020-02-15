@@ -47,8 +47,6 @@ const App = (props) => {
         toggleData();
     }, []);
 
-    console.log(displayView);
-
     return displayView.initView ? (
         <div className={style.authGroup}>
             <CloseBtn clickHandler={initViewHandler} />
@@ -58,6 +56,5 @@ const App = (props) => {
         </div>
     ) : null;
 };
-
 
 export default App

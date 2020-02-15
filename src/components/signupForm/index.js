@@ -1,10 +1,9 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import {withFormik} from 'formik';
 import * as Yup from 'yup';
-import classnames from 'classnames';
 import pick from 'lodash/pick';
-import values from 'lodash/values';
 import axios from 'axios';
+import { Loader, TextInput, GenerateError, Checkbox } from '../common'
 import style from '../style/style.scss'
 
 const API_LOGIN = '/api/v1/auth/login';
@@ -86,94 +85,6 @@ const enhancer = withFormik({
     displayName: 'signup',
 });
 
-const DisplayState = props => {
-    return (<div style={{margin: '1rem 0'}}>
-        <h3 style={{fontFamily: 'monospace'}} />
-        <pre
-            style={{
-                background: '#f6f8fa',
-                fontSize: '.65rem',
-                padding: '.5rem',
-            }}
-        >
-            <strong>props</strong> = {JSON.stringify(props, null, 2)}
-        </pre>
-    </div>)
-};
-
-const Label = ({error, className, children, ...props}) => {
-    return (
-        <label className={className} {...props}>
-            {children}
-        </label>
-    );
-};
-
-function Checkbox({id, label, error, value, onChange, className, ...props}) {
-    const classes = classnames(
-        style.inputGroupCheckBox,
-        {
-            [style.error]: !!error
-        },
-        className
-    );
-
-    return (
-        <div className={classes}>
-            <Label error={error} className={style.checkboxLabel}>
-                <input
-                    id={id}
-                    type="checkbox"
-                    checked={value}
-                    onChange={onChange}
-                    {...props} />
-                <span className={style.checkboxCustom} />
-                <div className={style.checkboxLblText}>{label}</div>
-            </Label>
-        </div>
-    );
-}
-
-const TextInput = ({type, id, label, error, touched, value, onChange, className, ...props}) => {
-    const classes = classnames(
-        style.inputGroup,
-        {
-            [style.error]: !!error,
-            [style.touched]: touched
-        },
-        className
-    );
-    return (
-        <div className={classes} >
-            <input
-                autocomplete="off"
-                id={id}
-                className={style.textInput}
-                type={type}
-                value={value}
-                onChange={onChange}
-                {...props}
-            />
-            <div className={style.fieldLabel}>
-                {label}
-            </div>
-        </div>
-    );
-};
-
-const GenerateError = ({touched, errors, serverErr}) => {
-    const touchedTrue = Object.keys(touched);
-    const errorList = values(pick(errors, touchedTrue));
-
-    if (serverErr && serverErr.server && serverErr.server.error) {
-        errorList.push(serverErr.server.message);
-    }
-
-    return <div className={style.errorsBox}>
-        {errorList.map((err)=>(<div className={style.errorsBoxItem}>*{err}</div>))}
-    </div>
-};
-
 const MyForm = props => {
     const {
         values,
@@ -195,7 +106,7 @@ const MyForm = props => {
 
     return (
         <form onSubmit={handleSubmit}>
-            {stat && stat.loading ? <div>Hello World</div> : null}
+            <Loader status={stat}/>
             <TextInput
                 id="name"
                 type="text"
@@ -274,7 +185,6 @@ const MyForm = props => {
                     SIGN UP
                 </button>
             </div>
-            {/*<DisplayState {...props} />*/}
         </form>
     );
 };
