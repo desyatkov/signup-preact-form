@@ -131,7 +131,7 @@ const Forgot = props => {
             {values && values.nextStep === 'done' ? <div>Your password has been changed successfully!</div> : null}
             {values && values.nextStep === 'done' ? null : <div className={style.submitWrap}>
                 <button className={style.submitButton} type="submit" disabled={!(dirty && !Object.keys(pick(errors, ["email"])).length) || isSubmitting}>
-                    {values && values.nextStep ? "Verify" : "Reset" }
+                    {values && values.nextStep ? "Done" : "Reset" }
                 </button>
             </div>}
         </form>
@@ -143,7 +143,7 @@ const MyEnhancedForgot = enhancer(Forgot);
 const ForgotForm = ({redirect, clickHandler}) => (
     <div className={style.app}>
         <p className={style.title}>
-            Kaaching! We want to give you 500 free spins - where should we send it?
+            Enter your email to reset your password
         </p>
 
         <MyEnhancedForgot

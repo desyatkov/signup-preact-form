@@ -100,7 +100,7 @@ const MyForm = props => {
 
             <div className={style.submitWrap}>
                 <button className={style.submitButton} type="submit" disabled={!(dirty && !Object.keys(pick(errors, ["email", "name", "password", "confirmpassword"])).length) || isSubmitting}>
-                    SIGN UP
+                    SIGN IN
                 </button>
             </div>
         </form>
@@ -112,7 +112,7 @@ const MyEnhancedForm = enhancer(MyForm);
 const SigninForm = ({redirect, clickHandler, forgotHandler}) => (
     <div className={style.app}>
         <p className={style.title}>
-            Kaaching! We want to give you 500 free spins - where should we send it?
+            Sign in to get your new exclusive offers
         </p>
         <MyEnhancedForm
             forgotHandlerClick={forgotHandler}

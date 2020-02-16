@@ -13,7 +13,7 @@ const CloseBtn = ({clickHandler}) => (
 
 const App = (props) => {
     const [displayView, setDisplayView] = useState({
-        initView: true,
+        initView: false,
         signUpView: true,
         signInView: false,
         forgotView: false,

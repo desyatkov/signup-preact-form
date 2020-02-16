@@ -182,7 +182,7 @@ const MyForm = props => {
 
             <div className={style.submitWrap}>
                 <button className={style.submitButton} type="submit" disabled={!(dirty && !Object.keys(pick(errors, ["email", "name", "password", "confirmpassword"])).length) || isSubmitting}>
-                    SIGN UP
+                    LET'S GO
                 </button>
             </div>
         </form>
@@ -194,7 +194,7 @@ const MyEnhancedForm = enhancer(MyForm);
 const SignupForm = ({redirect, clickHandler}) => (
     <div className={style.app}>
         <p className={style.title}>
-            Kaaching! We want to give you 500 free spins - where should we send it?
+            Just one thing left to do – leave your details to unlock exclusive offers, and stay up to date on new ones
         </p>
 
         <MyEnhancedForm
@@ -211,7 +211,7 @@ const SignupForm = ({redirect, clickHandler}) => (
             }
         />
 
-        <div className={style.changeView} onClick={clickHandler}>Already user? sign in</div>
+        <div className={style.changeView} onClick={clickHandler}>Already a user? sign in</div>
     </div>
 );
 
