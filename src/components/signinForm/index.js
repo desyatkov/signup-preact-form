@@ -120,7 +120,7 @@ const SigninForm = ({redirect, clickHandler, forgotHandler}) => (
                 {
                     email: '',
                     password: '',
-                    redirect: redirect,
+                    redirect: '',
                 }
             }
         />

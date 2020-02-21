@@ -150,7 +150,7 @@ const ForgotForm = ({redirect, clickHandler}) => (
             user={
                 {
                     email: '',
-                    redirect: redirect,
+                    redirect: '',
                     confirmationCode: 'XXXXXXXX',
                     newPassword: 'XXXXXXXX',
                     nextStep: false,

@@ -1,4 +1,6 @@
 import React from 'react';
+import axios from 'axios';
+
 import {useEffect, useState} from 'preact/hooks';
 import SigninForm from './signinForm'
 import SignupForm from './signupForm'
@@ -18,10 +20,17 @@ const App = (props) => {
         signInView: false,
         forgotView: false,
     });
-    const element = document.getElementById('click-me');
+
+    const element = document.querySelectorAll('[data-user-logged-in="true"]');
+    const logout = document.querySelector('[data-user-logged-in="logout"]');
 
     const initViewHandler = () => {
         setDisplayView(previewView => ({ ...displayView, initView: !previewView.initView,  signUpView: true, signInView: false, forgotView: false }))
+    };
+
+    const initViewHandlerClose = () => {
+        setDisplayView(previewView => ({ ...displayView, initView: !previewView.initView,  signUpView: true, signInView: false, forgotView: false }))
+        document.body.classList.remove("lock-scroll");
     };
 
     const changeViewSignUp = () => {
@@ -37,19 +46,39 @@ const App = (props) => {
     };
 
     const toggleData = () => {
-        element.addEventListener("mousedown", initViewHandler);
+        for (let i = 0; i < element.length; i++) {
+            element[i].addEventListener('mousedown', initViewHandler, false);
+        }
         return () => {
-            element.removeEventListener("mousedown", initViewHandler);
+            for (let i = 0; i < element.length; i++) {
+                element.removeEventListener("mousedown", initViewHandler);
+            }
         };
+    };
+
+    const logoutHandler = ()=>{
+        axios.post("api/v1/auth/logout").then(()=>{
+            window.location.reload();
+        });
+    };
+
+    const logoutEvent = () => {
+        if(logout){
+            logout.addEventListener('mousedown', logoutHandler, false);
+            return () => {
+                logout.addEventListener('mousedown', logoutHandler, false);
+            };
+        }
     };
 
     useEffect(() => {
         toggleData();
+        logoutEvent();
     }, []);
 
     return displayView.initView ? (
         <div className={style.authGroup}>
-            <CloseBtn clickHandler={initViewHandler} />
+            <CloseBtn clickHandler={initViewHandlerClose} />
             {displayView.signUpView ? <SignupForm redirect={props.urlRedirect} clickHandler={changeViewSignIn}/> : null}
             {displayView.signInView ? <SigninForm redirect={props.urlRedirect} clickHandler={changeViewSignUp} forgotHandler={changeViewForgot}/> : null}
             {displayView.forgotView ? <ForgotForm clickHandler={changeViewSignIn}/> : null}

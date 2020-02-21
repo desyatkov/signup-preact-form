@@ -49,11 +49,11 @@ const enhancer = withFormik({
             },
             profileFields: [
                 {
-                    key: "privacy-accept",
+                    key: "privacy_terms_approved",
                     value: privacy
                 },
                 {
-                    key: "subscription-accept",
+                    key: "newsletter_approved",
                     value: offers
                 }
             ]
@@ -191,7 +191,7 @@ const MyForm = props => {
 
 const MyEnhancedForm = enhancer(MyForm);
 
-const SignupForm = ({redirect, clickHandler}) => (
+const SignupForm = ({clickHandler}) => (
     <div className={style.app}>
         <p className={style.title}>
             Just one thing left to do – leave your details to unlock exclusive offers, and stay up to date on new ones
@@ -206,7 +206,7 @@ const SignupForm = ({redirect, clickHandler}) => (
                     confirmpassword: '',
                     privacy: false,
                     offers: false,
-                    redirect: redirect
+                    redirect: ""
                 }
             }
         />
