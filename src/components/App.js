@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import classnames from 'classnames';
 import axios from 'axios';
 
 import {useEffect, useState} from 'preact/hooks';
@@ -14,6 +15,7 @@ const CloseBtn = ({clickHandler}) => (
 );
 
 const App = (props) => {
+    const { urlRedirect = '' } = props;
     const [displayView, setDisplayView] = useState({
         initView: false,
         signUpView: true,
@@ -76,13 +78,25 @@ const App = (props) => {
         logoutEvent();
     }, []);
 
+    const classNameAuthGroup = classnames(
+        style.authGroup,
+        {
+            [style.signUp]: displayView.signUpView,
+            [style.signIn]: displayView.signInView,
+            [style.forgot]: displayView.forgotView,
+        }
+    );
+
     return displayView.initView ? (
-        <div className={style.authGroup}>
-            <CloseBtn clickHandler={initViewHandlerClose} />
-            {displayView.signUpView ? <SignupForm redirect={props.urlRedirect} clickHandler={changeViewSignIn}/> : null}
-            {displayView.signInView ? <SigninForm redirect={props.urlRedirect} clickHandler={changeViewSignUp} forgotHandler={changeViewForgot}/> : null}
-            {displayView.forgotView ? <ForgotForm clickHandler={changeViewSignIn}/> : null}
-        </div>
+        <Fragment>
+            <div className={style.backHolder}/>
+            <div className={classNameAuthGroup}>
+                <CloseBtn clickHandler={initViewHandlerClose} />
+                {displayView.signUpView ? <SignupForm redirect={urlRedirect} clickHandler={changeViewSignIn}/> : null}
+                {displayView.signInView ? <SigninForm redirect={urlRedirect} clickHandler={changeViewSignUp} forgotHandler={changeViewForgot}/> : null}
+                {displayView.forgotView ? <ForgotForm clickHandler={changeViewSignIn}/> : null}
+            </div>
+        </Fragment>
     ) : null;
 };
 

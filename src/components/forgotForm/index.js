@@ -20,6 +20,15 @@ const enhancer = withFormik({
         confirmationCode: Yup.string()
             .min(5, 'Code must be at least 6 characters')
             .required('Confirmation code can\'t be blank'),
+        confirmpassword: Yup.string()
+            .required('Confirm password can\'t be blank')
+            .when("newPassword", {
+                is: val => (!!(val && val.length > 0)),
+                then: Yup.string().oneOf(
+                    [Yup.ref("newPassword")],
+                    "Incompatible password"
+                )
+            }),
     }),
 
     mapPropsToValues: ({user}) => ({
@@ -50,6 +59,7 @@ const enhancer = withFormik({
                     setValues({...values, nextStep: true,});
                     setFieldValue('newPassword', '', false);
                     setFieldValue('confirmationCode', '', false);
+                    setFieldValue('confirmpassword', '', false);
                     setStatus({ nextStep: false, loading: false, server: {error: false, message: resp.message} });
 
                 })
@@ -125,12 +135,23 @@ const Forgot = props => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                 />
+                <TextInput
+                    id="confirmpassword"
+                    type="password"
+                    label="Confirm new password"
+                    placeholder=""
+                    error={touched.confirmpassword && errors.confirmpassword}
+                    value={values.confirmpassword}
+                    touched={touched.confirmpassword}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                />
             </Fragment> : null}
 
             <GenerateError touched={touched} errors={errors} serverErr={stat} />
             {values && values.nextStep === 'done' ? <div>Your password has been changed successfully!</div> : null}
             {values && values.nextStep === 'done' ? null : <div className={style.submitWrap}>
-                <button className={style.submitButton} type="submit" disabled={!(dirty && !Object.keys(pick(errors, ["email"])).length) || isSubmitting}>
+                <button className={style.submitButton} type="submit" disabled={!(dirty && !Object.keys(pick(errors, ["email", "password", "confirmpassword"])).length) || isSubmitting}>
                     {values && values.nextStep ? "Done" : "Reset" }
                 </button>
             </div>}
@@ -153,6 +174,7 @@ const ForgotForm = ({redirect, clickHandler}) => (
                     redirect: '',
                     confirmationCode: 'XXXXXXXX',
                     newPassword: 'XXXXXXXX',
+                    confirmpassword: 'XXXXXXXX',
                     nextStep: false,
                 }
             }

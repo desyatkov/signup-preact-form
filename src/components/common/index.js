@@ -48,7 +48,7 @@ const GenerateError = ({touched, errors, serverErr}) => {
     }
 
     return <div className={style.errorsBox}>
-        {errorList.map((err)=>(<div className={style.errorsBoxItem}>*{err}</div>))}
+        {errorList.map((err)=>(<div className={style.errorsBoxItem}>*{err.replace('username', 'email')}</div>))}
     </div>
 };
 

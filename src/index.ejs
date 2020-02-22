@@ -4,6 +4,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="lang" content="en-US">
+  <meta class="swiftype" name="st:title" data-type="string" content="Find top online casinos ">
+  <meta class="swiftype" name="st:page_type" data-type="enum" content="chart">
+  <meta class="swiftype" name="st:page_priority" data-type="integer" content="50">
+  <meta name="st:robots" content="follow, index">
   <title>Widget Template</title>
   <link href="https://fonts.googleapis.com/css?family=Montserrat:300,500,600&display=swap" rel="stylesheet">
   <style>
@@ -16,10 +25,6 @@
       margin: 0;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       font-family: Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
       font-size: 16px;
@@ -27,10 +32,11 @@
       color: #24292e;
       background-color: #F1F1F1;
       height: 100%;
+      margin: 0;
     }
 
-    input:-webkit-autofill {
-      -webkit-text-fill-color: yellow !important;
+    textarea:focus, input:focus{
+      outline: none;
     }
 
   </style>
@@ -43,7 +49,7 @@
   <div data-user-logged-in="logout">logout</div>
   <div data-widget-host="auth" class="auth-widget">
     <script type="text/props">
-      { "urlRedirect": ""}
+      { "urlRedirect": "/casino"}
     </script>
   </div>
   <div>

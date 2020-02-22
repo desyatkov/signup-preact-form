@@ -13,7 +13,8 @@ const enhancer = withFormik({
     validationSchema: Yup.object().shape({
         name: Yup.string()
             .min(2, 'Your name is longer than that')
-            .required('Name can\'t be blank'),
+            .max(30, 'Your name is longer than 20 characters')
+            .required('Display name can\'t be blank'),
         password: Yup.string()
             .min(8, 'Password must be at least 8 characters')
             .required('Password can\'t be blank'),
@@ -68,8 +69,10 @@ const enhancer = withFormik({
             .then((response) => {
                 const resp = response.data;
                 setStatus({ loading: false, server: {error: false, message: resp.message} });
+
                 if(redirect) {
-                    window.location.href = "redirect";
+                    window.location.href = redirect;
+                    return true
                 }
                 window.location.reload();
             })
@@ -110,7 +113,7 @@ const MyForm = props => {
             <TextInput
                 id="name"
                 type="text"
-                label="User name"
+                label="Display name"
                 placeholder=""
                 error={touched.name && errors.name}
                 value={values.name}
@@ -191,7 +194,7 @@ const MyForm = props => {
 
 const MyEnhancedForm = enhancer(MyForm);
 
-const SignupForm = ({clickHandler}) => (
+const SignupForm = ({clickHandler, redirect = ''}) => (
     <div className={style.app}>
         <p className={style.title}>
             Just one thing left to do – leave your details to unlock exclusive offers, and stay up to date on new ones
@@ -206,7 +209,7 @@ const SignupForm = ({clickHandler}) => (
                     confirmpassword: '',
                     privacy: false,
                     offers: false,
-                    redirect: ""
+                    redirect: redirect
                 }
             }
         />
