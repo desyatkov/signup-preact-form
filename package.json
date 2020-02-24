@@ -1,7 +1,7 @@
 {
   "name": "login-rapido",
   "version": "0.1.0",
-  "description": "",
+  "description": "New login form",
   "main": "dist/index.js",
   "umd:main": "dist/index.umd.js",
   "module": "dist/index.m.js",
@@ -15,8 +15,7 @@
     "dist": "microbundle --entry src/components/hello-world/index.js"
   },
   "keywords": [],
-  "author": "Zouhir <zouhir@zouhir.org>",
-  "license": "MIT",
+  "author": "desyatkov <sergey.desyatkov@naturalint.com>",
   "devDependencies": {
     "@babel/plugin-transform-regenerator": "^7.8.3",
     "@babel/preset-react": "^7.8.3",
@@ -47,7 +46,6 @@
     "preact-render-to-string": "^4.1.0",
     "preact-router": "^2.5.7",
     "react-hook-form": "^4.9.3",
-    "recompose": "^0.30.0",
     "superstatic": "^6.0.4",
     "yup": "^0.28.1"
   },

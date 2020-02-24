@@ -78,11 +78,11 @@
 
 	&.touched ~ .fieldLabel,
 	&:focus ~ .fieldLabel {
-		transform: scale(.75) translateY(-20px) translateX(11px);
+		transform: scale(0.75) translateY(-7px) translateX(12px);
 		left: 0;
 		top: 0;
 		color: #FF5000 !important;
-		transform-origin: bottom left;
+		transform-origin: top left;
 	}
 
 	&:focus {
@@ -110,7 +110,7 @@
 	width: auto;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	transform-origin: bottom left;
+	transform-origin: top left;
 }
 
 .inputGroup {
@@ -118,10 +118,10 @@
 	margin-bottom: 14px;
 
 	&.touched .fieldLabel {
-		transform: scale(.75) translateY(-20px) translateX(11px);
+		transform: scale(0.75) translateY(-7px) translateX(12px);
 		left: 0;
 		top: 0;
-		transform-origin: bottom left;
+		transform-origin: top left;
 	}
 
 	&.error {
