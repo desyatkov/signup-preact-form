@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import pick from 'lodash/pick';
 import axios from 'axios';
 import { Loader, TextInput, GenerateError, Checkbox } from '../common'
+import { getProfileFieldsValues } from './getLocalStorageProfile';
 import style from '../style/style.scss'
 
 const API_LOGIN = '/api/v1/auth/login';
@@ -42,6 +43,9 @@ const enhancer = withFormik({
     handleSubmit: (values, {setSubmitting, setStatus, setFieldValue}) => {
         const { email, name, password, privacy, offers, redirect} = values;
 
+        const quizData = JSON.parse(localStorage.getItem('PLG-Unit-1659-game-story'));
+        const addProfileFields = getProfileFieldsValues(quizData);
+
         const payload = {
             userData: {
                 email,
@@ -56,8 +60,10 @@ const enhancer = withFormik({
                 {
                     key: "newsletter_approved",
                     value: offers
-                }
-            ]
+                },
+                ...addProfileFields,
+            ],
+
         };
 
         setStatus({ loading: true });
