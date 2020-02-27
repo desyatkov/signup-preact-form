@@ -10,6 +10,14 @@ import style from '../style/style.scss'
 const API_LOGIN = '/api/v1/auth/login';
 const VERIFIED_SIGN_UP = '/api/v1/auth/verified-sign-up';
 
+const sendFbqEvent = () => {
+    if(typeof fbq === 'function') {
+        fbq('track', 'AddToCart');
+    } else {
+        console.error('ERROR: fbq not exist')
+    }
+};
+
 const enhancer = withFormik({
     validationSchema: Yup.object().shape({
         name: Yup.string()
@@ -70,6 +78,7 @@ const enhancer = withFormik({
 
         axios.post(VERIFIED_SIGN_UP, payload)
             .then(function (response) {
+                sendFbqEvent();
                 return axios.post(API_LOGIN, {email, password})
             })
             .then((response) => {
@@ -116,6 +125,7 @@ const MyForm = props => {
     return (
         <form onSubmit={handleSubmit}>
             <Loader status={stat}/>
+            <div>
             <TextInput
                 id="name"
                 type="text"
@@ -185,6 +195,7 @@ const MyForm = props => {
                 onBlur={handleBlur}
                 label="Send me tips & exclusive offers"
             />
+            </div>
 
 
             <GenerateError touched={touched} errors={errors} serverErr={stat} />

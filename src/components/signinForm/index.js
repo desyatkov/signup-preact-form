@@ -31,7 +31,7 @@ const enhancer = withFormik({
                 const resp = response.data;
                 setStatus({ loading: false, server: {error: false, message: resp.message} });
                 if(redirect) {
-                    window.location.href = "redirect";
+                    window.location.href = redirect;
                 }
                 window.location.reload();
             })

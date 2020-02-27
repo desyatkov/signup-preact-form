@@ -43,12 +43,12 @@ const GenerateError = ({touched, errors, serverErr}) => {
     const touchedTrue = Object.keys(touched);
     const errorList = values(pick(errors, touchedTrue));
 
-    if (serverErr && serverErr.server && serverErr.server.error) {
+    if (serverErr && serverErr.server && serverErr.server.message) {
         errorList.push(serverErr.server.message);
     }
 
     return <div className={style.errorsBox}>
-        {errorList.map((err)=>(<div className={style.errorsBoxItem}>*{err.replace('username', 'email')}</div>))}
+        {errorList.length > 0 ? errorList.map((err)=>(<div className={style.errorsBoxItem}>*{err.replace('username', 'email')}</div>)) : null}
     </div>
 };
 
