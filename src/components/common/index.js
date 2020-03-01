@@ -85,10 +85,17 @@ function Checkbox({id, label, error, value, onChange, className, ...props}) {
     );
 }
 
+function sendEvent(eventObj){
+    if( typeof ni === 'object' && ni.uiEvents && typeof ni.uiEvents.trackEvent === 'function'  ) {
+        ni.uiEvents.trackEvent(eventObj);
+    }
+}
+
 export {
     Loader,
     TextInput,
     GenerateError,
     Checkbox,
-    Label
+    Label,
+    sendEvent,
 }
