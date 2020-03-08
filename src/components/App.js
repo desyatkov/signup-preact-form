@@ -54,7 +54,7 @@ const App = (props) => {
             signUpView: true,
             signInView: false,
             forgotView: false
-        }))
+        }));
         sendEvent(eventObj);
         const scriptTag = document.createElement('script');
         const targetTag = document.getElementById('playgorithm-unit-1659');
@@ -62,7 +62,14 @@ const App = (props) => {
         scriptTag.src = 'https://client.playgorithm.com/latest?renderMode=html&containerId=playgorithm-unit-1659&token=eyJzaXRlSWQiOjQ3NCwiZW1iZWRJZCI6MTY1OSwidG9rZW4iOiIkMnkkMTAkYXd2T3lwTHRXUlBuUHpvQWR0ZmpDdWhCWnY1N0FtQnl0bWx2Ym5VN3RydDdrZTliaUhTeksiLCJ0aW1lc3RhbXAiOjE1ODE5MzMxNDh9&lang=en&noPoweredBy=1';
         document.body.appendChild(scriptTag);
         window.addEventListener("playgorithm-game-ended", (e) => {
-            setDisplayView(previewView => ({...displayView, initQuizUp: false, initView: true}))
+            setDisplayView(previewView => ({...displayView, initQuizUp: false, initView: true}));
+            sendEvent({
+                category: 'quiz',
+                action: 'quiz done successful',
+                optLabel: '',
+                optValue: '',
+                optNonInteraction: false,
+            });
         });
     };
 
