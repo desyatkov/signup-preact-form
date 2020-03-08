@@ -61,13 +61,12 @@ const enhancer = withFormik({
                     setFieldValue('confirmationCode', '', false);
                     setFieldValue('confirmpassword', '', false);
                     setStatus({ nextStep: false, loading: false, server: {error: false, message: resp.message} });
-
                 })
                 .catch(function (error, data) {
                     setStatus({ nextStep: false, loading: false, server: {error: true, message: error.response.data.message} });
                 }).finally(()=>{
-                setSubmitting(false);
-            })
+                    setSubmitting(false);
+                })
         }
     },
 

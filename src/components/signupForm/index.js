@@ -3,11 +3,20 @@ import {withFormik} from 'formik';
 import * as Yup from 'yup';
 import pick from 'lodash/pick';
 import axios from 'axios';
-import { Loader, TextInput, GenerateError, Checkbox } from '../common'
+import { Loader, TextInput, GenerateError, Checkbox, sendEvent } from '../common'
+import { getProfileFieldsValues } from './getLocalStorageProfile';
 import style from '../style/style.scss'
 
 const API_LOGIN = '/api/v1/auth/login';
 const VERIFIED_SIGN_UP = '/api/v1/auth/verified-sign-up';
+
+const sendFbqEvent = () => {
+    if(typeof fbq === 'function') {
+        fbq('track', 'AddToCart');
+    } else {
+        console.error('ERROR: fbq not exist')
+    }
+};
 
 const enhancer = withFormik({
     validationSchema: Yup.object().shape({
@@ -40,7 +49,17 @@ const enhancer = withFormik({
     }),
 
     handleSubmit: (values, {setSubmitting, setStatus, setFieldValue}) => {
+        sendEvent({
+            category: 'Sign Up',
+            action: 'Click on lets go',
+            optLabel: 'Sign up',
+            optValue: '',
+            optNonInteraction: false,
+        });
         const { email, name, password, privacy, offers, redirect} = values;
+
+        const quizData = JSON.parse(localStorage.getItem('PLG-Unit-1659-game-story'));
+        const addProfileFields = getProfileFieldsValues(quizData);
 
         const payload = {
             userData: {
@@ -56,14 +75,17 @@ const enhancer = withFormik({
                 {
                     key: "newsletter_approved",
                     value: offers
-                }
-            ]
+                },
+                ...addProfileFields,
+            ],
+
         };
 
         setStatus({ loading: true });
 
         axios.post(VERIFIED_SIGN_UP, payload)
             .then(function (response) {
+                sendFbqEvent();
                 return axios.post(API_LOGIN, {email, password})
             })
             .then((response) => {
@@ -84,7 +106,6 @@ const enhancer = withFormik({
                 setSubmitting(false);
             })
         },
-
     displayName: 'signup',
 });
 
@@ -110,6 +131,7 @@ const MyForm = props => {
     return (
         <form onSubmit={handleSubmit}>
             <Loader status={stat}/>
+            <div>
             <TextInput
                 id="name"
                 type="text"
@@ -120,6 +142,13 @@ const MyForm = props => {
                 touched={touched.name}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                onFocus={()=>{sendEvent({
+                    category: 'Sign up',
+                    action: 'user name focus',
+                    optLabel: 'Sign up',
+                    optValue: '',
+                    optNonInteraction: false,
+                })}}
             />
 
             <TextInput
@@ -132,6 +161,13 @@ const MyForm = props => {
                 touched={touched.email}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                onFocus={()=>{sendEvent({
+                    category: 'Sign up',
+                    action: 'email focus',
+                    optLabel: 'Sign up',
+                    optValue: '',
+                    optNonInteraction: false,
+                })}}
             />
 
             <TextInput
@@ -144,6 +180,13 @@ const MyForm = props => {
                 touched={touched.password}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                onFocus={()=>{sendEvent({
+                    category: 'Sign up',
+                    action: 'password focus',
+                    optLabel: 'Sign up',
+                    optValue: '',
+                    optNonInteraction: false,
+                })}}
             />
 
             <TextInput
@@ -156,6 +199,13 @@ const MyForm = props => {
                 touched={touched.confirmpassword}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                onFocus={()=>{sendEvent({
+                    category: 'Sign up',
+                    action: 'confirm password focus',
+                    optLabel: 'Sign up',
+                    optValue: '',
+                    optNonInteraction: false,
+                })}}
             />
 
             <Checkbox
@@ -164,7 +214,16 @@ const MyForm = props => {
                 checked={values.privacy}
                 error={touched.privacy && errors.privacy}
                 value={values.privacy}
-                onChange={handleChange}
+                onChange={(e) => {
+                    handleChange(e);
+                    sendEvent({
+                        category: 'Sign up',
+                        action: 'checkbox terms change',
+                        optLabel: 'Sign up',
+                        optValue: '',
+                        optNonInteraction: false,
+                    })
+                }}
                 onBlur={handleBlur}
                 label={(()=>(<Fragment>I am over 18 and have accepted the <a href="/terms-of-use" target="_blank">Terms</a> and <a href="/privacy-policy" target="_blank">Privacy Policy</a></Fragment>))()}
             />
@@ -175,10 +234,20 @@ const MyForm = props => {
                 checked={values.offers}
                 error={touched.offers && errors.offers}
                 value={values.offers}
-                onChange={handleChange}
+                onChange={(e) => {
+                    handleChange(e);
+                    sendEvent({
+                        category: 'Sign up',
+                        action: 'checkbox newsletter change',
+                        optLabel: 'Sign up',
+                        optValue: '',
+                        optNonInteraction: false,
+                    })
+                }}
                 onBlur={handleBlur}
                 label="Send me tips & exclusive offers"
             />
+            </div>
 
 
             <GenerateError touched={touched} errors={errors} serverErr={stat} />

@@ -43,12 +43,12 @@ const GenerateError = ({touched, errors, serverErr}) => {
     const touchedTrue = Object.keys(touched);
     const errorList = values(pick(errors, touchedTrue));
 
-    if (serverErr && serverErr.server && serverErr.server.error) {
+    if (serverErr && serverErr.server && serverErr.server.message) {
         errorList.push(serverErr.server.message);
     }
 
     return <div className={style.errorsBox}>
-        {errorList.map((err)=>(<div className={style.errorsBoxItem}>*{err.replace('username', 'email')}</div>))}
+        {errorList.length > 0 ? errorList.map((err)=>(<div className={style.errorsBoxItem}>*{err.replace('username', 'email')}</div>)) : null}
     </div>
 };
 
@@ -85,10 +85,17 @@ function Checkbox({id, label, error, value, onChange, className, ...props}) {
     );
 }
 
+function sendEvent(eventObj){
+    if( typeof ni === 'object' && ni.uiEvents && typeof ni.uiEvents.trackEvent === 'function'  ) {
+        ni.uiEvents.trackEvent(eventObj);
+    }
+}
+
 export {
     Loader,
     TextInput,
     GenerateError,
     Checkbox,
-    Label
+    Label,
+    sendEvent,
 }
