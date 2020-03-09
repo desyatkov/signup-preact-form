@@ -3,7 +3,7 @@ const each = require('lodash/each');
 const get = require('lodash/get');
 
 const ids = {
-    '250946': "game_prefs",
+    '254710': "game_prefs",
     '250947': "casino_prefs",
     '250948': "bingo_prefs",
     '250949': "poker_prefs",
@@ -13,9 +13,9 @@ const ids = {
     '250953': "payment_type",
     '250954': "bonus_type",
     '250955': "game_frequency",
-    '250956': "casino_type",
-    '250957': "player_level",
-    '250958': "prize_plans",
+    '254712': "casino_type",
+    '254713': "player_level",
+    '254711': "prize_plans",
     '252550': "slots_prefs"
 };
 
