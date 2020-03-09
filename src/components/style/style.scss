@@ -15,9 +15,10 @@
 }
 
 .closeBtnWrap {
-	position: absolute;
+	position: fixed;
 	right: 20px;
-	top: 20px;
+	top: 81px;
+	z-index: 30;
 }
 
 .closeBtn {
@@ -50,8 +51,8 @@
 	.title {
 		font-size: 1.25em;
 		font-style: normal;
-		font-weight: 600;
-		line-height: 126%;
+		font-weight: 500;
+		line-height: 130%;
 		margin: 56px 0 25px;
 		color: #545454;
 	}
@@ -81,12 +82,12 @@
 		transform: scale(0.75) translateY(-7px) translateX(12px);
 		left: 0;
 		top: 0;
-		color: #FF5000 !important;
+		color: #FF004F !important;
 		transform-origin: top left;
 	}
 
 	&:focus {
-		border-color: #FF5000 !important;
+		border-color: #FF004F !important;
 	}
 }
 
@@ -126,11 +127,11 @@
 
 	&.error {
 		.textInput {
-			border-color: #FF004F;
+			border-color: #E8211B;
 		}
 
 		.fieldLabel {
-			color: #FF004F;
+			color: #E8211B;
 		}
 	}
 }

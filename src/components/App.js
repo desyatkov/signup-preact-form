@@ -9,8 +9,8 @@ import ForgotForm from './forgotForm'
 import { sendEvent } from './common'
 import style from './style/style.scss';
 
-const CloseBtn = ({clickHandler}) => (
-    <div onClick={clickHandler} className={style.closeBtnWrap}>
+const CloseBtn = ({clickHandler, ...rest}) => (
+    <div onClick={clickHandler} className={style.closeBtnWrap} {...rest}>
         <div className={style.closeBtn} />
     </div>
 );
@@ -73,15 +73,20 @@ const App = (props) => {
         });
     };
 
-    const initViewHandlerClose = () => {
-        setDisplayView(previewView => ({
-            ...displayView,
-            initView: !previewView.initView,
-            signUpView: true,
-            signInView: false,
-            forgotView: false
-        }))
-        document.body.classList.remove("lock-scroll");
+    const initViewHandlerClose = (e = {}) => {
+        const closeQuiz = get(e, 'currentTarget.dataset.quizRole', 'false');
+        if (closeQuiz === 'true') {
+            setDisplayView(previewView => ({
+                ...displayView,
+                initQuizUp: false
+            }));
+        } else {
+            setDisplayView(previewView => ({
+                ...displayView,
+                initView: !previewView.initView
+            }));
+            document.body.classList.remove("lock-scroll");
+        }
     };
 
     const changeViewSignUp = () => {
@@ -153,8 +158,8 @@ const App = (props) => {
     return displayView.initView ? (
         <Fragment>
             <div className={style.backHolder} />
+            <CloseBtn clickHandler={initViewHandlerClose} data-quiz-role={displayView.initQuizUp}/>
             <div className={classNameAuthGroup}>
-                <CloseBtn clickHandler={initViewHandlerClose} />
                 {displayView.initQuizUp ? (
                     <div id='playgorithm-unit-1659' className={style.quizWrap} />
                 ) : (
